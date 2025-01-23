@@ -1,6 +1,6 @@
-name: 'AI Assisted Code Review'
-description: 'Use LLMs to perform automatic code reviews. Powered by AutoReviewer.'
-author: 'gvasilei'
+name: 'Auto Code Reviewer'
+description: 'Use LLMs to perform automatic code reviews'
+author: 'admin-rimba'
 branding:
   icon: 'git-pull-request'
   color: 'gray-dark'
