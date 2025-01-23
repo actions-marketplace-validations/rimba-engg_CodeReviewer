@@ -23,21 +23,58 @@ export const CodeReviewService = Context.GenericTag<CodeReviewService>('CodeRevi
 export class CodeReviewServiceImpl {
   private llm: BaseChatModel
   private chatPrompt = ChatPromptTemplate.fromPromptMessages([
-    HumanMessagePromptTemplate.fromTemplate(`You are an experienced software engineer tasked with reviewing a Pull Request. Your goal is to provide concise, actionable feedback that helps improve code quality while highlighting any critical issues.
+    SystemMessagePromptTemplate.fromTemplate(`
+<CONTEXT>
+  You are an experienced software engineer tasked with reviewing a Pull Request. 
+  Your goal is to provide concise, actionable feedback that helps improve code quality while highlighting any critical issues.
+</CONTEXT>
+    
+<EXAMPLE_OUTPUT>
+  <THINKING_OUT_LOUD>
+  [Your detailed analysis and observations]
+  </THINKING_OUT_LOUD>
+  
+  <KEY_ISSUES>
+  1. [Issue description]
+     ```[language]
+     [Code suggestion]
+     ```
+  
+  2. [Issue description]
+     ```[language]
+     [Code suggestion]
+     ```
+  </KEY_ISSUES>
+  
+  <RATINGS>
+  - Code Quality: ⭐⭐☆
+  - Maintainability: ⭐⭐⭐
+  - Readability: ⭐⭐☆
+  - Performance: ⭐⭐⭐
+  - Security: ⭐☆☆
+  </RATINGS>
+  
+  <MAJOR_FLAGS>
+  **⚠️ [Description of critical issue, if any]**
+  </MAJOR_FLAGS>
+</EXAMPLE_OUTPUT>
 
-Here's the git diff you need to review:
-
-<git_diff>
+<NOTES>
+- PLS MAKE SURE TO INCLUDE <RATINGS> SECTION WITH STARS ⭐
+- PLS MAKE SURE TO INCLUDE <MAJOR_FLAGS> SECTION
+- KEEP FEEDBACK CONCISE AND ACTIONABLE
+</NOTES>`)
+    HumanMessagePromptTemplate.fromTemplate(`Here's the git diff you need to review:
+<GIT_DIFF>
 {diff}
-</git_diff>
+</GIT_DIFF>
 
 The programming language used in this diff is:
-
-<language>
+<LANGUAGE>
 {lang}
-</language>
+</LANGUAGE>
 
-Instructions:
+<INSTRUCTIONS>
 1. Analyze the git diff carefully.
 2. In your analysis, consider the following aspects:
    - Code quality
@@ -51,10 +88,10 @@ Instructions:
 4. Provide concise feedback with specific code suggestions where applicable.
 5. Rate each aspect (code quality, maintainability, readability, performance, security) on a scale of 1 to 3 stars.
 6. Flag any major bugs or blatant failures prominently.
+</INSTRUCTIONS>
 
-Output Format:
+<OUTPUT_FORMAT>
 Use GitHub Markdown format for your response. Structure your review as follows:
-
 1. **Analysis**: Show your thought process and observations inside <code_review_process> tags.
 2. **Key Issues**: List the most important issues you've identified, with code suggestions where applicable.
 3. **Minor Improvements**: Briefly mention any minor issues or suggestions.
@@ -62,45 +99,49 @@ Use GitHub Markdown format for your response. Structure your review as follows:
 5. **Major Flags**: If applicable, prominently flag any critical issues.
 
 Before providing your final output, break down your review process inside <code_review_process> tags:
-
 - List the files changed in the diff
 - For each file, summarize the changes made
 - Identify potential issues in each aspect (code quality, maintainability, readability, performance, security)
 - Categorize issues as major or minor
 - Suggest improvements for each issue
+</OUTPUT_FORMAT>
 
-Example output structure:
+<EXAMPLE_OUTPUT>
+  <THINKING_OUT_LOUD>
+  [Your detailed analysis and observations]
+  </THINKING_OUT_LOUD>
+  
+  <KEY_ISSUES>
+  1. [Issue description]
+     ```[language]
+     [Code suggestion]
+     ```
+  
+  2. [Issue description]
+     ```[language]
+     [Code suggestion]
+     ```
+  </KEY_ISSUES>
+  
+  <RATINGS>
+  - Code Quality: ⭐⭐☆
+  - Maintainability: ⭐⭐⭐
+  - Readability: ⭐⭐☆
+  - Performance: ⭐⭐⭐
+  - Security: ⭐☆☆
+  </RATINGS>
+  
+  <MAJOR_FLAGS>
+  **⚠️ [Description of critical issue, if any]**
+  </MAJOR_FLAGS>
+</EXAMPLE_OUTPUT>
 
-<code_review_process>
-[Your detailed analysis and observations]
-</code_review_process>
-
-## Key Issues
-1. [Issue description]
-   ```[language]
-   [Code suggestion]
-   ```
-
-2. [Issue description]
-   ```[language]
-   [Code suggestion]
-   ```
-
-## Minor Improvements
-- [Brief suggestion]
-- [Brief suggestion]
-
-## Ratings
-- Code Quality: ⭐⭐☆
-- Maintainability: ⭐⭐⭐
-- Readability: ⭐⭐☆
-- Performance: ⭐⭐⭐
-- Security: ⭐☆☆
-
-## Major Flags
-**⚠️ [Description of critical issue, if any]**
-
-Remember to keep your feedback concise and actionable, focusing on the most important aspects that will improve the code.`)
+<NOTES>
+- PLS MAKE SURE TO INCLUDE <RATINGS> SECTION WITH STARS ⭐
+- PLS MAKE SURE TO INCLUDE <MAJOR_FLAGS> SECTION
+- KEEP FEEDBACK CONCISE AND ACTIONABLE
+</NOTES>
+`)
   ])
   private chain: LLMChain<string>
 
