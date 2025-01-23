@@ -13,7 +13,7 @@ inputs:
     required: true
   model_name: 
     description: 'OpenAI model name'
-    default: 'o1-preview'
+    default: 'gpt-4o'
   model_temperature:
     description: 'OpenAI model temperature'
     default: '0'
