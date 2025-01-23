@@ -29,21 +29,16 @@ export class CodeReviewServiceImpl {
   Your goal is to provide concise, actionable feedback that helps improve code quality while highlighting any critical issues.
 </CONTEXT>
     
-<EXAMPLE_OUTPUT>
-  <THINKING_OUT_LOUD>
+<OUTPUT_FORMAT>
+  <CODE_REVIEW_PROCESS>
   [Your detailed analysis and observations]
-  </THINKING_OUT_LOUD>
+  </CODE_REVIEW_PROCESS>
   
   <KEY_ISSUES>
   1. [Issue description]
-     ```[language]
-     [Code suggestion]
-     ```
-  
+    [Code suggestion]
   2. [Issue description]
-     ```[language]
      [Code suggestion]
-     ```
   </KEY_ISSUES>
   
   <RATINGS>
@@ -57,13 +52,13 @@ export class CodeReviewServiceImpl {
   <MAJOR_FLAGS>
   **⚠️ [Description of critical issue, if any]**
   </MAJOR_FLAGS>
-</EXAMPLE_OUTPUT>
+</OUTPUT_FORMAT>
 
 <NOTES>
 - PLS MAKE SURE TO INCLUDE <RATINGS> SECTION WITH STARS ⭐
 - PLS MAKE SURE TO INCLUDE <MAJOR_FLAGS> SECTION
 - KEEP FEEDBACK CONCISE AND ACTIONABLE
-</NOTES>`)
+</NOTES>`), 
     HumanMessagePromptTemplate.fromTemplate(`Here's the git diff you need to review:
 <GIT_DIFF>
 {diff}
@@ -88,39 +83,32 @@ The programming language used in this diff is:
 4. Provide concise feedback with specific code suggestions where applicable.
 5. Rate each aspect (code quality, maintainability, readability, performance, security) on a scale of 1 to 3 stars.
 6. Flag any major bugs or blatant failures prominently.
-</INSTRUCTIONS>
 
-<OUTPUT_FORMAT>
-Use GitHub Markdown format for your response. Structure your review as follows:
-1. **Analysis**: Show your thought process and observations inside <code_review_process> tags.
+1. **Analysis**: Show your thought process and observations inside <CODE_REVIEW_PROCESS> tags.
 2. **Key Issues**: List the most important issues you've identified, with code suggestions where applicable.
 3. **Minor Improvements**: Briefly mention any minor issues or suggestions.
 4. **Ratings**: Provide star ratings for each aspect.
 5. **Major Flags**: If applicable, prominently flag any critical issues.
 
-Before providing your final output, break down your review process inside <code_review_process> tags:
+Before providing your final output, break down your review process inside <CODE_REVIEW_PROCESS> tags:
 - List the files changed in the diff
 - For each file, summarize the changes made
 - Identify potential issues in each aspect (code quality, maintainability, readability, performance, security)
 - Categorize issues as major or minor
 - Suggest improvements for each issue
-</OUTPUT_FORMAT>
+</INSTRUCTIONS>
 
-<EXAMPLE_OUTPUT>
-  <THINKING_OUT_LOUD>
+<OUTPUT_FORMAT>
+  <CODE_REVIEW_PROCESS>
   [Your detailed analysis and observations]
-  </THINKING_OUT_LOUD>
+  </CODE_REVIEW_PROCESS>
   
   <KEY_ISSUES>
   1. [Issue description]
-     ```[language]
      [Code suggestion]
-     ```
   
   2. [Issue description]
-     ```[language]
      [Code suggestion]
-     ```
   </KEY_ISSUES>
   
   <RATINGS>
@@ -134,11 +122,12 @@ Before providing your final output, break down your review process inside <code_
   <MAJOR_FLAGS>
   **⚠️ [Description of critical issue, if any]**
   </MAJOR_FLAGS>
-</EXAMPLE_OUTPUT>
+</OUTPUT_FORMAT>
 
 <NOTES>
-- PLS MAKE SURE TO INCLUDE <RATINGS> SECTION WITH STARS ⭐
-- PLS MAKE SURE TO INCLUDE <MAJOR_FLAGS> SECTION
+- PLS MAKE SURE OUTPUT FOLLOWS <OUTPUT_FORMAT>
+- PLS MAKE SURE TO INCLUDE <RATINGS> SECTION WITH STARS ⭐ IN <OUTPUT_FORMAT>
+- PLS MAKE SURE TO INCLUDE <MAJOR_FLAGS> SECTION IN <OUTPUT_FORMAT>
 - KEEP FEEDBACK CONCISE AND ACTIONABLE
 </NOTES>
 `)
